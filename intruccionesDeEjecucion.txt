@@ -1,0 +1,6 @@
+1) python -m venv entornoNuclear
+2 y Ejecucion Normal) entornoNuclear\Scripts\activate          
+3) pip install arcade
+4) Para actualizar la lista de requerimientos: pip freeze > requirements.txt
+
+Nota: Actualizar este repositorio con lo de casa.
