@@ -20,6 +20,14 @@ class NuclearControlPanel(arcade.Window):
         self.game_state = "running"  # Estados: "running", "game_over", "success"
         self.time_elapsed = 0
         self.current_step = 0  # Paso actual en la secuencia de apagado
+
+
+        # Cargar la fuente personalizada
+        arcade.load_font("Fuente/Minecraft.ttf")
+        self.font = "Minecraft"  # Nombre del archivo sin la extensión
+
+
+       # self.font = "SCRIPAL.ttf"   # Usar fuente del sistema
         self.instructions = [
             "1. Detener turbinas",
             "2. Ventilar contenido radioactivo",
@@ -61,55 +69,55 @@ class NuclearControlPanel(arcade.Window):
 
         if self.game_state == "running":
             # Dibujar marcadores
-            arcade.draw_text(f"Nivel de agua: {self.water_level}%", 50, 500, arcade.color.WHITE, 16)
-            arcade.draw_text(f"Temperatura: {self.temperature} °C", 50, 460, arcade.color.WHITE, 16)
-            arcade.draw_text(f"Energía generada: {self.energy_level} MWe", 50, 420, arcade.color.WHITE, 16)
-            arcade.draw_text(f"Tiempo restante: {max(0, GAME_TIME_LIMIT - self.time_elapsed):.1f} s", 50, 380, arcade.color.WHITE, 16)
+            arcade.draw_text(f"Nivel de agua: {self.water_level}%", 50, 500, arcade.color.WHITE, 16, font_name=self.font)
+            arcade.draw_text(f"Temperatura: {self.temperature} °C", 50, 460, arcade.color.WHITE, 16, font_name=self.font)
+            arcade.draw_text(f"Energía generada: {self.energy_level} MWe", 50, 420, arcade.color.WHITE, 16, font_name=self.font)
+            arcade.draw_text(f"Tiempo restante: {max(0, GAME_TIME_LIMIT - self.time_elapsed):.1f} s", 50, 380, arcade.color.WHITE, 16, font_name=self.font)
 
             # Mostrar instrucción actual con el contador de clics
             progress = f"{self.action_counters[self.current_step]}/{self.get_required_clicks(self.current_step)}"
-            arcade.draw_text(f"Instrucción: {self.current_instruction} ({progress})", 50, 340, arcade.color.YELLOW, 16)
+            arcade.draw_text(f"Instrucción: {self.current_instruction} ({progress})", 50, 340, arcade.color.YELLOW, 16, font_name=self.font)
 
             # Dibujar alertas de error si hay alguna
             if self.alert_message:
-                arcade.draw_text(self.alert_message, 50, 300, arcade.color.RED, 16)
+                arcade.draw_text(self.alert_message, 50, 300, arcade.color.RED, 16, font_name=self.font)
 
             # Dibujar botones para la secuencia correcta
             arcade.draw_rectangle_filled(200, 100, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Detener Turbinas", 160, 90, arcade.color.BLACK, 12)
+            arcade.draw_text("Detener Turbinas", 160, 90, arcade.color.BLACK, 12, font_name=self.font)
 
             arcade.draw_rectangle_filled(400, 100, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Ventilar", 380, 90, arcade.color.BLACK, 12)
+            arcade.draw_text("Ventilar", 380, 90, arcade.color.BLACK, 12, font_name=self.font)
 
             arcade.draw_rectangle_filled(600, 100, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Inyectar Agua", 560, 90, arcade.color.BLACK, 12)
+            arcade.draw_text("Inyectar Agua", 560, 90, arcade.color.BLACK, 12, font_name=self.font)
 
             arcade.draw_rectangle_filled(200, 50, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Evacuar Agua", 160, 40, arcade.color.BLACK, 12)
+            arcade.draw_text("Evacuar Agua", 160, 40, arcade.color.BLACK, 12, font_name=self.font)
 
             arcade.draw_rectangle_filled(400, 50, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Apagar Reactor", 360, 40, arcade.color.BLACK, 12)
+            arcade.draw_text("Apagar Reactor", 360, 40, arcade.color.BLACK, 12, font_name=self.font)
 
             arcade.draw_rectangle_filled(600, 50, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Emergencia", 570, 40, arcade.color.BLACK, 12)
+            arcade.draw_text("Emergencia", 570, 40, arcade.color.BLACK, 12, font_name=self.font)
 
         elif self.game_state == "game_over":
             # Dibujar la pantalla de Game Over
-            arcade.draw_text("¡Game Over!", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, arcade.color.RED, 40)
+            arcade.draw_text("¡Game Over!", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, arcade.color.RED, 40, font_name=self.font)
             arcade.draw_rectangle_filled(300, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Reiniciar", 270, 190, arcade.color.BLACK, 14)
+            arcade.draw_text("Reiniciar", 270, 190, arcade.color.BLACK, 14, font_name=self.font)
 
             arcade.draw_rectangle_filled(500, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Salir", 475, 190, arcade.color.BLACK, 14)
+            arcade.draw_text("Salir", 475, 190, arcade.color.BLACK, 14, font_name=self.font)
 
         elif self.game_state == "success":
             # Dibujar la pantalla de éxito
-            arcade.draw_text("¡Lograste desactivar el reactor!", SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50, arcade.color.GREEN, 30)
+            arcade.draw_text("¡Lograste desactivar el reactor!", SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50, arcade.color.GREEN, 30, font_name=self.font)
             arcade.draw_rectangle_filled(300, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Reiniciar", 270, 190, arcade.color.BLACK, 14)
+            arcade.draw_text("Reiniciar", 270, 190, arcade.color.BLACK, 14, font_name=self.font)
 
             arcade.draw_rectangle_filled(500, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Salir", 475, 190, arcade.color.BLACK, 14)
+            arcade.draw_text("Salir", 475, 190, arcade.color.BLACK, 14, font_name=self.font)
 
     def on_mouse_press(self, x, y, button, modifiers):
         """Detecta clics en los botones."""
