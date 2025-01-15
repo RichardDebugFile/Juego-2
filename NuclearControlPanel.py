@@ -2,7 +2,7 @@ import arcade
 
 # Configuración básica de la ventana
 SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 670
 SCREEN_TITLE = "Simulación de Central Nuclear"
 
 # Variables de estado del sistema
@@ -17,10 +17,12 @@ class NuclearControlPanel(arcade.Window):
     def __init__(self):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
         arcade.set_background_color(arcade.color.DARK_SLATE_BLUE)
+        # Cargar la imagen de fondo
+        self.background = arcade.load_texture("imagenes/Panel2.jpg")
+        
         self.game_state = "running"  # Estados: "running", "game_over", "success"
         self.time_elapsed = 0
-        self.current_step = 0  # Paso actual en la secuencia de apagado
-
+        self.current_step = 0
 
         # Cargar la fuente personalizada
         arcade.load_font("Fuente/Minecraft.ttf")
@@ -67,6 +69,9 @@ class NuclearControlPanel(arcade.Window):
         """Dibuja la interfaz gráfica."""
         arcade.start_render()
 
+       # Dibujar la imagen de fondo ajustada al tamaño de la ventana
+        arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+
         if self.game_state == "running":
             # Dibujar marcadores
             arcade.draw_text(f"Nivel de agua: {self.water_level}%", 50, 500, arcade.color.WHITE, 16, font_name=self.font)
@@ -76,7 +81,7 @@ class NuclearControlPanel(arcade.Window):
 
             # Mostrar instrucción actual con el contador de clics
             progress = f"{self.action_counters[self.current_step]}/{self.get_required_clicks(self.current_step)}"
-            arcade.draw_text(f"Instrucción: {self.current_instruction} ({progress})", 50, 340, arcade.color.YELLOW, 16, font_name=self.font)
+            arcade.draw_text(f"Instrucción: {self.current_instruction} ({progress})", 50, 612, arcade.color.YELLOW, 13, font_name=self.font)
 
             # Dibujar alertas de error si hay alguna
             if self.alert_message:
