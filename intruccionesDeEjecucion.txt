@@ -1,6 +1,10 @@
+IMPORTANTE: USAR PYTHON 3.10
 1) python -m venv entornoNuclear
 2 y Ejecucion Normal) entornoNuclear\Scripts\activate          
 3) pip install arcade
 4) Para actualizar la lista de requerimientos: pip freeze > requirements.txt
 
-Nota: Actualizar este repositorio con lo de casa.
+
+En caso de tener problemas con el entorno virtual al crearse un entorno en una versión no deseada, ejecutar:
+py -3.10 -m venv entornoNuclear
+El número se cambia con la verion necesaria (recomendada en version 3.10 o 3.11)

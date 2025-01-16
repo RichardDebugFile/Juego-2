@@ -102,17 +102,17 @@ class NuclearControlPanel(arcade.Window):
             arcade.draw_rectangle_filled(365, 355, 180, 70, arcade.color.GRAY)
             arcade.draw_text("Ventilar", 310, 335, arcade.color.BLACK, 22, font_name=self.font)
 
-            arcade.draw_rectangle_filled(130, 265, 185, 65, arcade.color.GRAY)
-            arcade.draw_text("Inyectar Agua", 55, 250, arcade.color.BLACK, 16, font_name=self.font)
+            arcade.draw_rectangle_filled(130, 270, 185, 65, arcade.color.GRAY)
+            arcade.draw_text("Inyectar Agua", 55, 253, arcade.color.BLACK, 16, font_name=self.font)
 
-            arcade.draw_rectangle_filled(200, 50, 180, 70, arcade.color.GRAY)
-            arcade.draw_text("Evacuar Agua", 160, 40, arcade.color.BLACK, 12, font_name=self.font)
+            arcade.draw_rectangle_filled(365, 268, 183, 67, arcade.color.GRAY)
+            arcade.draw_text("Evacuar Agua", 287, 250, arcade.color.BLACK, 17, font_name=self.font)
 
-            arcade.draw_rectangle_filled(400, 50, 180, 70, arcade.color.GRAY)
-            arcade.draw_text("Apagar Reactor", 360, 40, arcade.color.BLACK, 12, font_name=self.font)
+            arcade.draw_rectangle_filled(130, 183, 184, 72, arcade.color.GRAY)
+            arcade.draw_text("Apagar Reactor", 55, 170, arcade.color.BLACK, 14, font_name=self.font)
 
-            arcade.draw_rectangle_filled(600, 50, 180, 70, arcade.color.GRAY)
-            arcade.draw_text("Emergencia", 570, 40, arcade.color.BLACK, 12, font_name=self.font)
+            arcade.draw_rectangle_filled(363, 183, 184, 70, arcade.color.RED)
+            arcade.draw_text("Emergencia", 290, 166, arcade.color.WHITE, 19, font_name=self.font)
 
         elif self.game_state == "game_over":
             # Dibujar la pantalla de Game Over
