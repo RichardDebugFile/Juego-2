@@ -184,6 +184,14 @@ class NuclearControlPanel(arcade.Window):
                     align="center"
                 )
 
+                # Botón de "Saltar"
+                arcade.draw_rectangle_filled(400, 100, 120, 40, arcade.color.GRAY)  # Dibujar rectángulo para el botón
+                arcade.draw_text(
+                    "Saltar",  # Texto del botón
+                    365, 90,  # Coordenadas del texto
+                    arcade.color.BLACK, 14, font_name=self.font
+                )
+
         else:   
 
             # Dibujar la imagen de fondo ajustada al tamaño de la ventana
@@ -280,6 +288,13 @@ class NuclearControlPanel(arcade.Window):
             elif 440 < x < 560 and 100 < y < 140:
                 arcade.close_window()
 
+        if self.game_state == "countdown":
+            # Botón "Saltar"
+            if 340 < x < 460 and 80 < y < 120:  # Coordenadas del botón "Saltar"
+                self.game_state = "running"  # Cambiar directamente al estado de juego
+                self.setup()  # Configurar el estado inicial del juego
+
+
         if self.game_state == "running":
             if 40 < x < 220 and 320 < y < 390:  # Detener Turbinas
                 if self.current_step == 0:
@@ -348,7 +363,8 @@ class NuclearControlPanel(arcade.Window):
         elif self.game_state in ["game_over", "success"]:
             if 240 < x < 360 and 260 < y < 300:  # Reiniciar
                 self.setup()
-                self.game_state = "running"  # Cambia el estado del juego a "running"
+                self.game_state = "countdown"  # Cambia el estado del juego a "running"
+                self.countdown_timer = 5 # Reiniciar el temporizador de cuenta regresiva
             elif 440 < x < 560 and 260 < y < 300:  # Salir
                 arcade.close_window()
 
