@@ -28,8 +28,6 @@ class NuclearControlPanel(arcade.Window):
         arcade.load_font("Fuente/Minecraft.ttf")
         self.font = "Minecraft"  # Nombre del archivo sin la extensión
 
-
-       # self.font = "SCRIPAL.ttf"   # Usar fuente del sistema
         self.instructions = [
             "1. Detener turbinas",
             "2. Ventilar contenido radioactivo",
@@ -69,7 +67,7 @@ class NuclearControlPanel(arcade.Window):
         """Dibuja la interfaz gráfica."""
         arcade.start_render()
 
-       # Dibujar la imagen de fondo ajustada al tamaño de la ventana
+        # Dibujar la imagen de fondo ajustada al tamaño de la ventana
         arcade.draw_lrwh_rectangle_textured(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
         if self.game_state == "running":
@@ -86,14 +84,15 @@ class NuclearControlPanel(arcade.Window):
             arcade.draw_text("Tiempo restante:", 625, 195, arcade.color.BLACK, 14, font_name=self.font)
             arcade.draw_text(f"{max(0, GAME_TIME_LIMIT - self.time_elapsed):.1f} s", 665, 155, arcade.color.BLACK, 24, font_name=self.font)
 
-
             # Mostrar instrucción actual con el contador de clics
             progress = f"{self.action_counters[self.current_step]}/{self.get_required_clicks(self.current_step)}"
             arcade.draw_text(f"Instrucción: {self.current_instruction} ({progress})", 50, 612, arcade.color.YELLOW, 13, font_name=self.font)
 
+            arcade.draw_rectangle_filled(405, 72, 615, 30, arcade.color.ORANGE)
+
             # Dibujar alertas de error si hay alguna
             if self.alert_message:
-                arcade.draw_text(self.alert_message, 50, 300, arcade.color.RED, 16, font_name=self.font)
+                arcade.draw_text(self.alert_message, 105, 60, arcade.color.RED, 12, font_name=self.font) 
 
             # Dibujar botones para la secuencia correcta
             arcade.draw_rectangle_filled(130, 355, 180, 70, arcade.color.GRAY)
@@ -135,7 +134,7 @@ class NuclearControlPanel(arcade.Window):
     def on_mouse_press(self, x, y, button, modifiers):
         """Detecta clics en los botones."""
         if self.game_state == "running":
-            if 140 < x < 260 and 80 < y < 120:  # Detener Turbinas
+            if 40 < x < 220 and 320 < y < 390:  # Detener Turbinas
                 if self.current_step == 0:
                     self.action_counters[0] += 1
                     if self.action_counters[0] >= self.get_required_clicks(0):
@@ -145,7 +144,7 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_message = "Error: Paso incorrecto, sigue la instrucción."
                     self.alert_timer = 4  # Reiniciar temporizador a 4 segundos
 
-            elif 340 < x < 460 and 80 < y < 120:  # Ventilar contenido radioactivo
+            elif 275 < x < 455 and 320 < y < 390:  # Ventilar contenido radioactivo
                 if self.current_step == 1:
                     self.action_counters[1] += 1
                     if self.action_counters[1] >= self.get_required_clicks(1):
@@ -155,7 +154,7 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_message = "Error: Paso incorrecto, sigue la instrucción."
                     self.alert_timer = 4
 
-            elif 540 < x < 660 and 80 < y < 120:  # Inyectar agua fría
+            elif 40 < x < 225 and 235 < y < 300:  # Inyectar agua fría
                 if self.current_step == 2:
                     self.water_level = min(100, self.water_level + 10)
                     self.temperature = max(50, self.temperature - 5)
@@ -167,7 +166,7 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_message = "Error: Paso incorrecto, sigue la instrucción."
                     self.alert_timer = 4
 
-            elif 140 < x < 260 and 30 < y < 70:  # Evacuar agua caliente
+            elif 275 < x < 458 and 230 < y < 295:  # Evacuar agua caliente
                 if self.current_step == 3:
                     self.water_level = max(0, self.water_level - 10)
                     self.action_counters[3] += 1
@@ -179,7 +178,7 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_message = "Error: Paso incorrecto, sigue la instrucción."
                     self.alert_timer = 4
 
-            elif 340 < x < 460 and 30 < y < 70:  # Apagar reactor
+            elif 40 < x < 224 and 145 < y < 215:  # Apagar reactor
                 if self.current_step == 4:
                     self.action_counters[4] += 1
                     if self.action_counters[4] >= 1:
@@ -192,7 +191,7 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_message = "Error: Paso incorrecto, sigue la instrucción."
                     self.alert_timer = 4
 
-            elif 540 < x < 660 and 30 < y < 70:  # Botón de emergencia
+            elif 275 < x < 458 and 145 < y < 215:  # Botón de emergencia
                 if self.current_step == 5 and self.temperature == 0:
                     self.game_state = "success"
                 else:
