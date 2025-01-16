@@ -113,23 +113,39 @@ class NuclearControlPanel(arcade.Window):
             arcade.draw_rectangle_filled(363, 183, 184, 70, arcade.color.RED)
             arcade.draw_text("Emergencia", 290, 166, arcade.color.WHITE, 19, font_name=self.font)
 
-        elif self.game_state == "game_over":
-            # Dibujar la pantalla de Game Over
-            arcade.draw_text("¡Game Over!", SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT // 2 + 50, arcade.color.RED, 40, font_name=self.font)
-            arcade.draw_rectangle_filled(300, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Reiniciar", 270, 190, arcade.color.BLACK, 14, font_name=self.font)
+        elif self.game_state in ["game_over", "success"]:
+        # Dibujar capa de difuminado
+            arcade.draw_rectangle_filled(
+                SCREEN_WIDTH // 2,
+                SCREEN_HEIGHT // 2,
+                SCREEN_WIDTH,
+                SCREEN_HEIGHT,
+                (0, 0, 0, 150)  # Color negro con alfa 150 (transparencia)
+            )
 
-            arcade.draw_rectangle_filled(500, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Salir", 475, 190, arcade.color.BLACK, 14, font_name=self.font)
+        if self.game_state == "game_over":
+            # Dibujar la pantalla de Game Over
+            arcade.draw_text(
+                "¡Game Over!", 230, 400,
+                arcade.color.RED, 40, font_name=self.font
+            )
+            arcade.draw_rectangle_filled(300, 280, 120, 40, arcade.color.GRAY)
+            arcade.draw_text("Reiniciar", 260, 270, arcade.color.BLACK, 14, font_name=self.font)
+
+            arcade.draw_rectangle_filled(500, 280, 120, 40, arcade.color.GRAY)
+            arcade.draw_text("Salir", 475, 270, arcade.color.BLACK, 14, font_name=self.font)
 
         elif self.game_state == "success":
             # Dibujar la pantalla de éxito
-            arcade.draw_text("¡Lograste desactivar el reactor!", SCREEN_WIDTH // 2 - 200, SCREEN_HEIGHT // 2 + 50, arcade.color.GREEN, 30, font_name=self.font)
-            arcade.draw_rectangle_filled(300, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Reiniciar", 270, 190, arcade.color.BLACK, 14, font_name=self.font)
-
-            arcade.draw_rectangle_filled(500, 200, 120, 40, arcade.color.GRAY)
-            arcade.draw_text("Salir", 475, 190, arcade.color.BLACK, 14, font_name=self.font)
+            arcade.draw_text(
+                "¡Lograste desactivar el reactor!", 90, 400,
+                arcade.color.GREEN, 30, font_name=self.font
+            )
+            arcade.draw_rectangle_filled(300, 280, 120, 40, arcade.color.GRAY)
+            arcade.draw_text("Reiniciar", 260, 270, arcade.color.BLACK, 14, font_name=self.font)
+            arcade.draw_rectangle_filled(500, 280, 120, 40, arcade.color.GRAY)
+            arcade.draw_text("Salir", 475, 270, arcade.color.BLACK, 14, font_name=self.font)
+        
 
     def on_mouse_press(self, x, y, button, modifiers):
         """Detecta clics en los botones."""
@@ -199,9 +215,9 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_timer = 4
 
         elif self.game_state in ["game_over", "success"]:
-            if 240 < x < 360 and 180 < y < 220:  # Reiniciar
+            if 240 < x < 360 and 260 < y < 300:  # Reiniciar
                 self.setup()
-            elif 440 < x < 560 and 180 < y < 220:  # Salir
+            elif 440 < x < 560 and 260 < y < 300:  # Salir
                 arcade.close_window()
 
     def update(self, delta_time):
