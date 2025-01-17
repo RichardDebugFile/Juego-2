@@ -8,3 +8,8 @@ IMPORTANTE: USAR PYTHON 3.10
 En caso de tener problemas con el entorno virtual al crearse un entorno en una versión no deseada, ejecutar:
 py -3.10 -m venv entornoNuclear
 El número se cambia con la verion necesaria (recomendada en version 3.10 o 3.11)
+
+Proceso de extracción .exe:
+1) pip install pyinstaller
+2) pyinstaller --onefile --windowed --add-data "imagenes;imagenes" --add-data "Musica;Musica" --add-data "Fuente;Fuente" main.py
+3) El archivo .exe estará en la carpeta dist, sacalo de ahi y ponlo en el entorno principal y ejecuta
