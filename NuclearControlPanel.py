@@ -20,11 +20,23 @@ class NuclearControlPanel(arcade.Window):
         # Cargar la imagen de fondo
         self.start_background = arcade.load_texture("imagenes/fondoInicio.jpg")
         self.background = arcade.load_texture("imagenes/Panel2.jpg")
+        self.alert_icon = arcade.load_texture("imagenes/alert_icon.png")  
+        
+
+        # Cargar la música de fondo
+        self.background_music = arcade.load_sound("Musica/Dark_Intro.ogg")
+        self.running_music = arcade.load_sound("Musica/panelDesactivar.ogg")
+        self.music_player = None  # Controlador para manejar la música
+        self.current_music = None  # Rastrea qué música está activa actualmente
+
         
         self.game_state = "start"  # Estados: "running", "game_over", "success"
         self.time_elapsed = 0
         self.current_step = 0
         self.countdown_timer = 5  # Temporizador para la cuenta regresiva
+        self.temperature_critical = False  # Bandera para alerta de temperatura
+        self.blink_timer = 0  # Temporizador para controlar el parpadeo
+        self.show_alert = True  # Controla si se muestra o no el ícono y texto
 
         # Cargar la fuente personalizada
         arcade.load_font("Fuente/Minecraft.ttf")
@@ -217,6 +229,26 @@ class NuclearControlPanel(arcade.Window):
 
                 arcade.draw_rectangle_filled(405, 72, 615, 30, arcade.color.ORANGE)
 
+                # Dibujar alerta si la temperatura es crítica
+                if self.temperature_critical and self.show_alert:
+                    # Dibujar ícono de alerta
+                    arcade.draw_lrwh_rectangle_textured(
+                        480,  # En X
+                        440,   # En Y
+                        40,  # Ancho
+                        40,  # Alto
+                        self.alert_icon
+                    )
+                    # Dibujar texto de alerta
+                    arcade.draw_text(
+                        "Temperatura Crítica",  # Texto
+                        448,  # En x
+                        428,      # En y
+                        arcade.color.RED,         # Color del texto
+                        8,                       # Tamaño de la fuente
+                        font_name=self.font       # Fuente personalizada
+                    )
+
                 # Dibujar alertas de error si hay alguna
                 if self.alert_message:
                     arcade.draw_text(self.alert_message, 105, 60, arcade.color.RED, 12, font_name=self.font) 
@@ -272,6 +304,56 @@ class NuclearControlPanel(arcade.Window):
                 arcade.draw_text("Reiniciar", 260, 270, arcade.color.BLACK, 14, font_name=self.font)
                 arcade.draw_rectangle_filled(500, 280, 120, 40, arcade.color.GRAY)
                 arcade.draw_text("Salir", 475, 270, arcade.color.BLACK, 14, font_name=self.font)
+
+
+            elif self.game_state == "final_message":
+        # Pantalla final
+                arcade.draw_lrwh_rectangle_textured(
+                    0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, self.start_background
+                )
+
+                # Dibujar texto final
+                arcade.draw_rectangle_filled(
+                    SCREEN_WIDTH // 2,
+                    SCREEN_HEIGHT // 2,
+                    SCREEN_WIDTH,
+                    SCREEN_HEIGHT,
+                    (0, 0, 0, 200)  # Fondo difuminado
+                )
+
+                final_message = [
+                    "Gracias a tu valentía y determinación, has logrado lo impensable:",
+                    "salvar a la humanidad de una catástrofe nuclear.",
+                    "",
+                    "Aunque hoy el mundo respira con alivio, el apocalipsis no ha terminado.",
+                    "Nuevas amenazas acechan en las sombras, y solo los valientes como tú",
+                    "pueden enfrentarlas.",
+                    "",
+                    "¡Buena suerte, héroe! La supervivencia del mañana depende",
+                    "de tus próximas decisiones."
+                ]
+
+
+                y_position = SCREEN_HEIGHT // 2 + 160
+                for line in final_message:
+                    arcade.draw_text(
+                        line,
+                        start_x=0,
+                        start_y=y_position,
+                        color=arcade.color.WHITE,
+                        font_size=16,
+                        font_name=self.font,
+                        width=SCREEN_WIDTH,
+                        align="center"
+                    )
+                    y_position -= 30  # Espaciado entre líneas
+
+                # Botón "Salir"
+                arcade.draw_rectangle_filled(400, 150, 120, 40, arcade.color.GRAY)
+                arcade.draw_text(
+                    "Salir", 370, 140, arcade.color.BLACK, 14, font_name=self.font
+                )
+
             
             super().on_draw()
 
@@ -361,22 +443,56 @@ class NuclearControlPanel(arcade.Window):
                     self.alert_timer = 4
 
         elif self.game_state in ["game_over", "success"]:
-            if 240 < x < 360 and 260 < y < 300:  # Reiniciar
-                self.setup()
-                self.game_state = "countdown"  # Cambia el estado del juego a "running"
-                self.countdown_timer = 5 # Reiniciar el temporizador de cuenta regresiva
-            elif 440 < x < 560 and 260 < y < 300:  # Salir
+            if self.game_state == "game_over":
+                if 240 < x < 360 and 260 < y < 300:  # Reiniciar
+                    self.setup()
+                    self.game_state = "countdown"  # Cambia el estado del juego a "countdown"
+                    self.countdown_timer = 5  # Reiniciar el temporizador de cuenta regresiva
+                elif 440 < x < 560 and 260 < y < 300: 
+                    if self.music_player:
+                        self.music_player.stop() # Salir
+                    arcade.close_window()  # Cierra la ventana directamente
+
+            elif self.game_state == "success":
+                if 240 < x < 360 and 260 < y < 300:  # Reiniciar
+                    self.setup()
+                    self.game_state = "countdown"  # Cambia el estado del juego a "countdown"
+                    self.countdown_timer = 5  # Reiniciar el temporizador de cuenta regresiva
+                elif 440 < x < 560 and 260 < y < 300:  # Salir
+                    self.game_state = "final_message"  # Cambia a la pantalla final
+
+
+        elif self.game_state == "final_message":
+            # Botón "Salir" en la pantalla final
+            if 340 < x < 460 and 130 < y < 170:  # Coordenadas del botón "Salir"
                 arcade.close_window()
 
     def update(self, delta_time):
         """Actualiza el estado del sistema."""
 
+        
+        # Control de música según el estado del juego
+        if self.game_state == "running":  # Música específica para "running"
+            if self.current_music != "running":  # Cambiar solo si no está ya activa
+                if self.music_player:
+                    arcade.stop_sound(self.music_player)  # Detener la música actual
+                self.music_player = arcade.play_sound(self.running_music, looping=True)  # Inicia música "running"
+                self.current_music = "running"  # Actualiza la música activa
+        else:  # Música de fondo para otros estados
+            if self.current_music != "background":  # Cambiar solo si no está ya activa
+                if self.music_player:
+                    arcade.stop_sound(self.music_player)  # Detener la música actual
+                self.music_player = arcade.play_sound(self.background_music, looping=True)  # Inicia música de fondo
+                self.current_music = "background"  # Actualiza la música activa
+
+        # Lógica del temporizador de cuenta regresiva
         if self.game_state == "countdown":
-            self.countdown_timer -= delta_time
-            if self.countdown_timer <= 0:
+            self.countdown_timer -= delta_time  # Reducir el temporizador
+            if self.countdown_timer <= 0:  # Si llega a 0, cambia al estado "running"
                 self.countdown_timer = 0
                 self.game_state = "running"
-                self.setup()
+                self.setup()  # Configurar el estado inicial del juego
+
 
         if self.game_state == "running":
             self.time_elapsed += delta_time
@@ -403,6 +519,17 @@ class NuclearControlPanel(arcade.Window):
                 if self.temperature <= 0:
                     self.temperature = 0
                     self.temperature_decreasing = False  # Detener la disminución de temperatura cuando llegue a 0
+
+            # Lógica para parpadeo del ícono de alerta
+            if self.temperature_critical:
+                self.blink_timer += delta_time
+                if self.blink_timer >= 0.5:  # Cambia la visibilidad cada 0.5 segundos
+                    self.show_alert = not self.show_alert
+                    self.blink_timer = 0
+
+
+            # Verificar si la temperatura es crítica
+            self.temperature_critical = self.temperature >= 1000
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
